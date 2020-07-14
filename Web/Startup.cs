@@ -1,10 +1,13 @@
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.HttpsPolicy;
 using Microsoft.AspNetCore.SpaServices.AngularCli;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using Repository.Context;
+using Microsoft.EntityFrameworkCore;
 
 namespace Web
 {
@@ -12,7 +15,9 @@ namespace Web
     {
         public Startup(IConfiguration configuration)
         {
-            Configuration = configuration;
+            var builder = new ConfigurationBuilder();
+            builder.AddJsonFile("config.json", optional: false, reloadOnChange: true);
+            Configuration = builder.Build();
         }
 
         public IConfiguration Configuration { get; }
@@ -21,6 +26,17 @@ namespace Web
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddControllersWithViews();
+
+            services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
+
+            var connectionString = Configuration.GetConnectionString("SqlConnection");
+            services.AddDbContext<FitContext>(options => options.UseLazyLoadingProxies().UseSqlServer(connectionString, m => m.MigrationsAssembly("Repository")));
+
+            //services.AddScoped<IProdutoRepositorio, ProdutoRepositorio>();
+            //services.AddScoped<IUsuarioRepositorio, UsuarioRepositorio>();
+            //services.AddScoped<IPedidoRepositorio, PedidoRepositorio>();
+
+
             // In production, the Angular files will be served from this directory
             services.AddSpaStaticFiles(configuration =>
             {
@@ -41,6 +57,8 @@ namespace Web
                 // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
                 app.UseHsts();
             }
+
+
 
             app.UseHttpsRedirection();
             app.UseStaticFiles();

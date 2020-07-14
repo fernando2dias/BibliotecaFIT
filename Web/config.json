@@ -1,0 +1,6 @@
+{
+  "ConnectionStrings": {
+    "SqlConnection": "Data Source=DESKTOP-FGKLH38;Initial Catalog=t_FitBiblioteca;Trusted_Connection=True;MultipleActiveResultSets=true",
+    "OracleString": ""
+  }
+}
