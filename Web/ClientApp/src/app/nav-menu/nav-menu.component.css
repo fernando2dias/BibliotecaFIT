@@ -21,3 +21,18 @@ html {
 nav {
   background: #0D7495;
 }
+
+.logo{
+    width: 65px;
+    margin-right:20px
+}
+
+.navbar-light .navbar-nav .nav-link{
+    color: #fff;
+}
+
+
+h1 {
+  color: #fff;
+  font-size: 20px;
+}
